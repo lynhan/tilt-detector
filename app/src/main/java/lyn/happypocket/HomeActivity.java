@@ -19,7 +19,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 
-// change value on tilt
 // put value in list
 // refresh value overnight
 
@@ -53,7 +52,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -116,28 +114,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         Log.i(tag, "incremented incremented incremented incremented incremented incremented");
     }
 
-    // SENSOR
 
-    public void initListeners()
-    {
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-    }
-
-
-    protected void onResume() {
-        super.onResume();
-//        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-//        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
-    }
-
-    protected void onPause() {
-        super.onPause();
-//        sensorManager.unregisterListener(this);
-    }
-
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
 
 
     /**
@@ -149,7 +126,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
      * or
      * tilt speed is too slow TODO
      */
-    public void checkReset(int deg) {
+    public void checkShyModeReset(int deg) {
         diff = Math.abs(deg - startDeg);
         if (diff < 15) {
             return;
@@ -173,11 +150,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
         }
         else if (diff > 25) {
             if (direction == 1 && deg < prevDeg) {
-//                Log.i(tag, "startDeg: " + startDeg);
-//                Log.i(tag, "prevDeg: " + prevDeg);
-//                Log.i(tag, "current deg: " + deg);
-//                Log.i(tag, "diff: " + diff);
-//                Log.i(tag, "direction: " + String.valueOf(direction));
                 direction = -1;
                 startDeg = deg;
                 tiltnum += 1;
@@ -185,12 +157,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
                 Log.i(tag, "OKAY TILT. tiltnum: " + tiltnum);
             }
             else if (direction == -1 && deg > prevDeg) {
-//                Log.i(tag, "startDeg: " + startDeg);
-//                Log.i(tag, "prevDeg: " + prevDeg);
-//                Log.i(tag, "current deg: " + deg);
-//                Log.i(tag, "diff: " + diff);
-//                Log.i(tag, "direction: " + String.valueOf(direction));
-//                Log.i(tag, "-1 reset to 1 before entering tilt range");
                 startDeg = deg;
                 direction = 1;
                 tiltnum += 1;
@@ -203,6 +169,10 @@ public class HomeActivity extends Activity implements SensorEventListener {
             incrementDayCount();
             tiltnum = 0;
         }
+    }
+
+    public void checkBamModeReset(int deg) {
+
     }
 
 
@@ -244,8 +214,33 @@ public class HomeActivity extends Activity implements SensorEventListener {
         float roll = orientation[1];
         int pitchDeg = (int) Math.round(Math.toDegrees(roll));
         powerTextView.setText(String.valueOf(pitchDeg));
-        checkReset(pitchDeg);
+        checkShyModeReset(pitchDeg);
     }
+
+
+    // SENSOR
+
+    public void initListeners()
+    {
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+
+    protected void onResume() {
+        super.onResume();
+//        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+//        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    protected void onPause() {
+        super.onPause();
+//        sensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
 
     @Override
     public void onDestroy() {
