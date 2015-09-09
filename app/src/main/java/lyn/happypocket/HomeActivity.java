@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -17,15 +19,38 @@ import android.widget.TextView;
 
 public class HomeActivity extends Activity {
 
-    TextView dayCount;
     SharedPreferences prefFile;
+    SharedPreferences.Editor editor;
+
+    TextView dayCountTextView;
+    int dayCountInt;
+    Button b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        dayCount=(TextView)findViewById(R.id.day_count);
+
         prefFile = getSharedPreferences("values", Context.MODE_PRIVATE);
+        dayCountInt = prefFile.getInt("dayCountInt", 0);
+        editor = prefFile.edit();
+
+        dayCountTextView=(TextView)findViewById(R.id.day_count);
+        dayCountTextView.setText(String.valueOf(dayCountInt));
+
+        Button b = (Button) findViewById(R.id.button_id);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                incrementDayCount();
+            }
+        });
+    }
+
+    public void incrementDayCount() {
+        this.dayCountInt += 1;
+        editor.putInt("dayCountInt", dayCountInt);
+        dayCountTextView.setText(String.valueOf(dayCountInt));
     }
 
     @Override
