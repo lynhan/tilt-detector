@@ -3,4 +3,5 @@
     <string name="day_count">omg</string>
     <string name="action_settings">Options</string>
     <string name="button_text">Tap</string>
+    <string name="power">default power</string>
 </resources>
