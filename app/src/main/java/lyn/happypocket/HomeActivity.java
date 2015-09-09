@@ -49,7 +49,7 @@ public class HomeActivity extends Activity {
 
     public void incrementDayCount() {
         this.dayCountInt += 1;
-        editor.putInt("dayCountInt", dayCountInt);
+        editor.putInt("dayCountInt", dayCountInt).apply();
         dayCountTextView.setText(String.valueOf(dayCountInt));
     }
 
