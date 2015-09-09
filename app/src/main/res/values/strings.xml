@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Happy Pocket</string>
+    <string name="day_count">0</string>
+    <string name="action_settings">Options</string>
+</resources>
